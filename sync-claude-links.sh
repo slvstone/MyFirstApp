@@ -9,7 +9,9 @@ elif [ -n "$OneDriveCommercial" ]; then
 else
   ONEDRIVE="$USERPROFILE/OneDrive"
 fi
-PROJECT_DIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+# 工作区根目录 = MyFirstApp 的上一级
+WORKSPACE_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 echo "========================================"
 echo " Claude 同步链接设置工具 (Bash)"
@@ -25,7 +27,7 @@ fi
 
 # ========== 链接 1: 项目 .claude ==========
 echo "[1/2] 设置项目 .claude 链接..."
-CLAUDE_DIR="$PROJECT_DIR/.claude"
+CLAUDE_DIR="$WORKSPACE_DIR/.claude"
 if [ -L "$CLAUDE_DIR" ] || [ -d "$CLAUDE_DIR" ]; then
   rm -rf "$CLAUDE_DIR"
 fi

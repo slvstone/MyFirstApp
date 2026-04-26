@@ -10,7 +10,9 @@ if defined OneDrive (
 ) else (
     set ONEDRIVE=%USERPROFILE%\OneDrive
 )
-set PROJECT_DIR=%~dp0
+set SCRIPT_DIR=%~dp0
+:: 工作区根目录 = MyFirstApp 的上一级
+for %%i in ("%SCRIPT_DIR%.") do set WORKSPACE_DIR=%%~dpi
 
 echo ========================================
 echo  Claude 同步链接设置工具
@@ -18,7 +20,7 @@ echo ========================================
 echo.
 echo 目标:
 echo   %ONEDRIVE%\claude\
-echo     ├── project-claude\   →  %PROJECT_DIR%.claude\
+echo     ├── project-claude\   →  %WORKSPACE_DIR%.claude\
 echo     └── memory\           →  %USERPROFILE%\.claude\projects\C--claude-workspace\memory\
 echo.
 
@@ -32,16 +34,16 @@ if not exist "%ONEDRIVE%\claude\project-claude" (
 
 :: ========== 链接 1: 项目 .claude ==========
 echo [1/2] 设置项目 .claude 链接...
-if exist "%PROJECT_DIR%.claude" (
-    dir "%PROJECT_DIR%.claude" | find "<JUNCTION>" >nul 2>nul
+if exist "%WORKSPACE_DIR%.claude" (
+    dir "%WORKSPACE_DIR%.claude" | find "<JUNCTION>" >nul 2>nul
     if !errorlevel! equ 0 (
-        rmdir "%PROJECT_DIR%.claude"
+        rmdir "%WORKSPACE_DIR%.claude"
     ) else (
         echo [警告] .claude 是真实目录，跳过（不覆盖已有数据）
         goto :link2
     )
 )
-mklink /J "%PROJECT_DIR%.claude" "%ONEDRIVE%\claude\project-claude"
+mklink /J "%WORKSPACE_DIR%.claude" "%ONEDRIVE%\claude\project-claude"
 echo   完成
 
 :link2
