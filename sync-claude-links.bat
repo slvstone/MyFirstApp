@@ -18,6 +18,28 @@ echo ========================================
 echo  Claude 同步链接设置工具
 echo ========================================
 echo.
+
+:: 检测 Claude Code 是否已安装
+where claude >nul 2>nul
+if !errorlevel! neq 0 (
+    echo [!] 未检测到 Claude Code，尝试自动安装...
+    where npm >nul 2>nul
+    if !errorlevel! neq 0 (
+        echo [错误] 未检测到 npm，请先安装 Node.js: https://nodejs.org/
+        pause
+        exit /b 1
+    )
+    npm install -g @anthropic-ai/claude-code
+    if !errorlevel! neq 0 (
+        echo [错误] Claude Code 安装失败，请手动安装: npm install -g @anthropic-ai/claude-code
+        pause
+        exit /b 1
+    )
+    echo Claude Code 安装成功！
+) else (
+    echo [OK] Claude Code 已安装
+)
+echo.
 echo 目标:
 echo   %ONEDRIVE%\claude\
 echo     ├── project-claude\   →  %WORKSPACE_DIR%.claude\
